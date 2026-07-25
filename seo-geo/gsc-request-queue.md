@@ -29,7 +29,7 @@ ones for free (marking `[i]` costs no quota).
 - [x] 2026-07-22 https://daniel-fox.com/what-to-ask-a-fractional-cmo-interview.html
 - [x] 2026-07-22 https://daniel-fox.com/fractional-cmo-denver-boulder.html
 - [x] 2026-07-22 https://daniel-fox.com/fractional-b2c-cmo.html (was "URL is unknown to Google")
-- [ ] https://daniel-fox.com/what-we-run.html
+- [x] 2026-07-25 https://daniel-fox.com/what-we-run.html
 - [ ] https://daniel-fox.com/who-its-for.html
 - [ ] https://daniel-fox.com/about.html
 - [ ] https://daniel-fox.com/contact.html
@@ -70,3 +70,12 @@ ones for free (marking `[i]` costs no quota).
   inspected "Discovered - currently not indexed") hit "Quota Exceeded" immediately —
   the quota appears to be a rolling ~24h window and yesterday's 7 requests hadn't
   aged out at this run time. URL left unchecked for next run.
+- 2026-07-25 (scheduled run): 1 requested (what-we-run.html — confirmed "Indexing
+  requested"). 2nd request click (who-its-for.html, "Discovered - currently not
+  indexed") hit "Quota Exceeded" — effective cap was 1 today. That URL was NOT
+  submitted, left unchecked. Note: what-we-run.html inspected as "URL is unknown to
+  Google / No referring sitemaps detected" while who-its-for.html correctly showed
+  https://daniel-fox.com/sitemap.xml as its referring sitemap — GSC's per-URL sitemap
+  state is inconsistent; worth resubmitting sitemap.xml in the Sitemaps report.
+  Quota is clearly much tighter than 10/day on this property; consider running the
+  task daily rather than every 2 days, since each run may only land 1-2 requests.
