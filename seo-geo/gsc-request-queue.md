@@ -30,17 +30,17 @@ ones for free (marking `[i]` costs no quota).
 - [x] 2026-07-22 https://daniel-fox.com/fractional-cmo-denver-boulder.html
 - [x] 2026-07-22 https://daniel-fox.com/fractional-b2c-cmo.html (was "URL is unknown to Google")
 - [x] 2026-07-25 https://daniel-fox.com/what-we-run.html
-- [ ] https://daniel-fox.com/who-its-for.html
-- [ ] https://daniel-fox.com/about.html
-- [ ] https://daniel-fox.com/contact.html
-- [ ] https://daniel-fox.com/insights.html
-- [ ] https://daniel-fox.com/beliefs.html
-- [ ] https://daniel-fox.com/fractional-cmo-paid-advertising-strategy.html
-- [ ] https://daniel-fox.com/fractional-cmo-struggling-marketing-strategy.html
-- [ ] https://daniel-fox.com/seo-for-high-ticket-businesses.html
-- [ ] https://daniel-fox.com/demand-generation-for-high-ticket-businesses.html
-- [ ] https://daniel-fox.com/getting-found-by-ai-search.html
-- [ ] https://daniel-fox.com/lead-generation-beyond-referrals.html
+- [x] 2026-07-27 https://daniel-fox.com/who-its-for.html
+- [x] 2026-07-27 https://daniel-fox.com/about.html
+- [i] https://daniel-fox.com/contact.html
+- [x] 2026-07-27 https://daniel-fox.com/insights.html
+- [x] 2026-07-27 https://daniel-fox.com/beliefs.html
+- [x] 2026-07-27 https://daniel-fox.com/fractional-cmo-paid-advertising-strategy.html
+- [x] 2026-07-27 https://daniel-fox.com/fractional-cmo-struggling-marketing-strategy.html
+- [x] 2026-07-27 https://daniel-fox.com/seo-for-high-ticket-businesses.html
+- [x] 2026-07-27 https://daniel-fox.com/demand-generation-for-high-ticket-businesses.html
+- [x] 2026-07-27 https://daniel-fox.com/getting-found-by-ai-search.html (was "URL is unknown to Google")
+- [x] 2026-07-27 https://daniel-fox.com/lead-generation-beyond-referrals.html
 - [ ] https://daniel-fox.com/how-do-i-know-if-my-market-is-saturated.html
 - [ ] https://daniel-fox.com/should-i-rebrand-or-reposition.html
 - [ ] https://daniel-fox.com/why-is-my-roas-declining.html
@@ -79,3 +79,25 @@ ones for free (marking `[i]` costs no quota).
   state is inconsistent; worth resubmitting sitemap.xml in the Sitemaps report.
   Quota is clearly much tighter than 10/day on this property; consider running the
   task daily rather than every 2 days, since each run may only land 1-2 requests.
+- 2026-07-27 (scheduled run): 10 requested — hit the run's own 10-click cap, NOT a
+  quota error. No "Quota Exceeded" dialog appeared at any point, so the tight caps
+  seen on 7/23 and 7/25 were a rolling-window effect, not a permanent low ceiling.
+  Requested: who-its-for, about, insights, beliefs,
+  fractional-cmo-paid-advertising-strategy, fractional-cmo-struggling-marketing-strategy,
+  seo-for-high-ticket-businesses, demand-generation-for-high-ticket-businesses,
+  getting-found-by-ai-search, lead-generation-beyond-referrals. Also marked contact.html
+  `[i]` — it inspected as "URL is on Google / Page is indexed" (an earlier inspection the
+  same run had shown it as "Discovered - currently not indexed", so GSC's inspection
+  results can be inconsistent minute-to-minute; the indexed reading was the later one).
+  Overview now reports 12 indexed / 22 not indexed, up from 4 indexed at the 7/22 baseline.
+  TOOLING NOTE for future runs: clicking REQUEST INDEXING by screen COORDINATE silently
+  no-ops (no spinner, no toast, no dialog — nothing happens and no quota is spent). Click
+  it by element `ref` from `find` instead. Even the ref click sometimes no-ops; the
+  reliable success check is the card itself — after a real request it reads
+  "✓ Indexing requested / REQUEST AGAIN" instead of "REQUEST INDEXING". Use that text as
+  the confirmation, and only re-click when the card still reads "REQUEST INDEXING"
+  (which proves nothing was submitted, so no double-spend). Also: `browser_batch` failed
+  for the whole run; use individual tool calls.
+  getting-found-by-ai-search.html again showed "URL is unknown to Google / No referring
+  sitemaps detected" despite being in sitemap.xml — 3rd URL to do this. Worth resubmitting
+  sitemap.xml in the Sitemaps report.
