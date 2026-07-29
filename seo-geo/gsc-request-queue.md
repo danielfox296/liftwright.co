@@ -18,7 +18,7 @@ harmless), 0 errors. Sitemap (32 URLs) submitted and clean; robots.txt clean.
 All 32 sitemap URLs are queued below — inspection sorts out the already-indexed
 ones for free (marking `[i]` costs no quota).
 
-## Pending (priority order — money pages first)
+## Pending (priority order — money pages first) — COMPLETE 2026-07-29
 
 - [x] 2026-07-22 https://daniel-fox.com/how-much-does-a-fractional-cmo-cost.html
 - [x] 2026-07-22 https://daniel-fox.com/is-a-fractional-cmo-worth-it.html
@@ -41,20 +41,20 @@ ones for free (marking `[i]` costs no quota).
 - [x] 2026-07-27 https://daniel-fox.com/demand-generation-for-high-ticket-businesses.html
 - [x] 2026-07-27 https://daniel-fox.com/getting-found-by-ai-search.html (was "URL is unknown to Google")
 - [x] 2026-07-27 https://daniel-fox.com/lead-generation-beyond-referrals.html
-- [ ] https://daniel-fox.com/how-do-i-know-if-my-market-is-saturated.html
-- [ ] https://daniel-fox.com/should-i-rebrand-or-reposition.html
-- [ ] https://daniel-fox.com/why-is-my-roas-declining.html
-- [ ] https://daniel-fox.com/why-arent-my-ads-converting-with-a-new-audience.html
-- [ ] https://daniel-fox.com/marketing-coordinator-vs-strategist.html
-- [ ] https://daniel-fox.com/product-market-fit-has-a-ceiling.html
-- [ ] https://daniel-fox.com/the-small-tweak-that-opens-the-next-market.html
-- [ ] https://daniel-fox.com/projective-empathy.html
-- [ ] https://daniel-fox.com/your-answers-are-working-as-designed.html
-- [ ] https://daniel-fox.com/your-dashboard-cant-tell-you-whats-wrong.html
+- [x] 2026-07-29 https://daniel-fox.com/how-do-i-know-if-my-market-is-saturated.html
+- [x] 2026-07-29 https://daniel-fox.com/should-i-rebrand-or-reposition.html
+- [x] 2026-07-29 https://daniel-fox.com/why-is-my-roas-declining.html
+- [i] https://daniel-fox.com/why-arent-my-ads-converting-with-a-new-audience.html
+- [x] 2026-07-29 https://daniel-fox.com/marketing-coordinator-vs-strategist.html
+- [x] 2026-07-29 https://daniel-fox.com/product-market-fit-has-a-ceiling.html
+- [x] 2026-07-29 https://daniel-fox.com/the-small-tweak-that-opens-the-next-market.html
+- [i] https://daniel-fox.com/projective-empathy.html
+- [x] 2026-07-29 https://daniel-fox.com/your-answers-are-working-as-designed.html
+- [x] 2026-07-29 https://daniel-fox.com/your-dashboard-cant-tell-you-whats-wrong.html
 
 ## Verify-only (likely already indexed; inspect and mark [i])
 
-- [ ] https://daniel-fox.com/
+- [i] https://daniel-fox.com/
 
 ## Run log
 
@@ -101,3 +101,23 @@ ones for free (marking `[i]` costs no quota).
   getting-found-by-ai-search.html again showed "URL is unknown to Google / No referring
   sitemaps detected" despite being in sitemap.xml — 3rd URL to do this. Worth resubmitting
   sitemap.xml in the Sitemaps report.
+- 2026-07-29 (scheduled run): 8 requested, 2 found already indexed and marked `[i]`
+  (why-arent-my-ads-converting-with-a-new-audience, projective-empathy). No "Quota
+  Exceeded" dialog at any point. Requested: how-do-i-know-if-my-market-is-saturated,
+  should-i-rebrand-or-reposition, why-is-my-roas-declining,
+  marketing-coordinator-vs-strategist, product-market-fit-has-a-ceiling,
+  the-small-tweak-that-opens-the-next-market, your-answers-are-working-as-designed,
+  your-dashboard-cant-tell-you-whats-wrong. Verify-only homepage https://daniel-fox.com/
+  inspected as "URL is on Google / Page is indexed" → `[i]`.
+  TOOLING NOTE: the browser window here renders at a 1204px-wide viewport, where GSC
+  COLLAPSES the "Inspect any URL" box into the magnifying-glass icon at ~[797, 48].
+  The flow that worked: navigate → wait 10s → click the magnifier (the first click after
+  a fresh load often only hovers; click again and screenshot to confirm the box is open
+  with a caret) → `type` the URL directly (no form_input needed, the box takes focus when
+  it expands) → screenshot to confirm → Return once. Everything else per the old notes:
+  click REQUEST INDEXING by `ref` from `find`, never by coordinate; confirm via the green
+  "Indexing requested" toast. `browser_batch` worked fine this run (contrary to 7/27).
+  If the extension drops mid-click ("Claude in Chrome is not connected"), screenshot
+  before retrying — the click may have landed (it had, once, this run).
+- 2026-07-29: COMPLETE — every URL in Pending and Verify-only is now `[x]` or `[i]`.
+  Scheduled task `gsc-request-indexing-daniel-fox` disabled.
