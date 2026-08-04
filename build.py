@@ -185,7 +185,12 @@ def write_sitemap(pages: list[dict]) -> None:
         if page["cfg"].get("robots", "").startswith("noindex"):
             continue
         loc = canonical_for(page["output"])
-        urls.append(f"  <url><loc>{html.escape(loc)}</loc></url>")
+        # Optional lastmod from the page's own dates (same idiom as the
+        # danielchristopherfox.com builder). Stable hand-set dates — never
+        # build-time stamps — so the changed-only IndexNow diff stays honest.
+        lastmod = page["cfg"].get("date_modified") or page["cfg"].get("date_published")
+        tail = f"<lastmod>{lastmod}</lastmod>" if lastmod else ""
+        urls.append(f"  <url><loc>{html.escape(loc)}</loc>{tail}</url>")
     sitemap = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -193,6 +198,39 @@ def write_sitemap(pages: list[dict]) -> None:
         + "\n</urlset>\n"
     )
     (ROOT / "sitemap.xml").write_text(sitemap, encoding="utf-8")
+
+
+def write_llms(pages: list[dict]) -> None:
+    """llms.txt from _src/llms.json (curated grouping + per-page title/desc)
+    joined against the pages that actually built. An entry's title/desc may be
+    null to derive from the page's config (title / meta_description). Warns on
+    drift both ways — a listed page that didn't build, or an indexable page
+    missing from llms.json — so the file can never silently rot again."""
+    spec = json.loads(read(SRC / "llms.json"))
+    by_output = {p["output"]: p["cfg"] for p in pages}
+    lines = ["# Daniel Fox", "", f"> {spec['intro']}"]
+    listed = set()
+    for section in spec["sections"]:
+        lines += ["", f"## {section['title']}", ""]
+        for entry in section["pages"]:
+            output = entry["page"]
+            cfg = by_output.get(output)
+            if cfg is None:
+                print(f"  ! llms.json lists {output} but no such page built")
+                continue
+            listed.add(output)
+            # Derived titles drop the shared " | Daniel Fox" suffix so they
+            # read like the curated ones; explicit entry titles win as-is.
+            title = entry.get("title") or cfg["title"].removesuffix(" | Daniel Fox").strip()
+            desc = entry.get("desc") or cfg.get("meta_description", "")
+            lines.append(f"- [{title}]({canonical_for(output)}): {desc}")
+    for page in pages:
+        if page["output"] in listed:
+            continue
+        if page["cfg"].get("robots", "").startswith("noindex"):
+            continue
+        print(f"  ! {page['output']} is indexable but missing from _src/llms.json — add it")
+    (ROOT / "llms.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main() -> None:
@@ -209,7 +247,8 @@ def main() -> None:
         else:
             print(f"  redirect {page_dir.name}")
     write_sitemap(built)
-    print(f"Done. {len(built)} pages + sitemap.xml")
+    write_llms(built)
+    print(f"Done. {len(built)} pages + sitemap.xml + llms.txt")
 
 
 if __name__ == "__main__":
