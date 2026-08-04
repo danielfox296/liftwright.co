@@ -34,9 +34,37 @@ jobs:
       - name: Stage site
         run: |
           mkdir -p _site
-          cp -r *.html styles.css CNAME _site/ 2>/dev/null || true
+          cp -r *.html *.css *.js CNAME _site/ 2>/dev/null || true
           cp -r sitemap.xml *.txt _site/ 2>/dev/null || true
           cp -r img _site/img 2>/dev/null || true
+
+      # This staging step is an ALLOWLIST, so any new asset type is silently
+      # dropped and only shows up as a 404 in production. That is exactly how
+      # cinema.js shipped missing on 2026-08-04. Fail the deploy instead: every
+      # local asset the built HTML references must exist in _site.
+      - name: Verify referenced assets were staged
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+          site = pathlib.Path('_site')
+          missing = set()
+          for page in site.glob('*.html'):
+              html = page.read_text(encoding='utf-8')
+              for attr in re.findall(r'(?:href|src)="([^"]+)"', html):
+                  if attr.startswith(('http://', 'https://', '//', '#', 'mailto:', 'data:')):
+                      continue
+                  path = attr.split('?')[0].split('#')[0].lstrip('/')
+                  if not path or not pathlib.Path(path).suffix:
+                      continue
+                  if not (site / path).exists():
+                      missing.add(f"{path}  (referenced by {page.name})")
+          if missing:
+              print("Referenced assets missing from _site:")
+              for m in sorted(missing):
+                  print("  -", m)
+              sys.exit(1)
+          print("All referenced local assets are staged.")
+          PY
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

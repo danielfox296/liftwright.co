@@ -1160,20 +1160,28 @@ figure.fig figcaption {
   line-height: 1.6;
   color: var(--muted);
   margin: 0;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s var(--ease) 2.6s, transform 0.8s var(--ease) 2.6s;
 }
-.scene-hero .hero-actions {
-  margin-top: min(2.2rem, 3.4vh);
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s var(--ease) 2.8s, transform 0.8s var(--ease) 2.8s;
-}
+.scene-hero .hero-actions { margin-top: min(2.2rem, 3.4vh); }
 .scene-hero .hero-credential {
   font-size: 0.78rem;
   color: var(--faint);
   margin: min(2.8rem, 4vh) 0 0;
+}
+/* Every hidden start-state below is gated behind `.js`. Ungated, a failed or
+   missing cinema.js leaves the hero lead, buttons and credential invisible with
+   nothing able to bring them back — which is precisely what shipped when
+   cinema.js 404'd. If the script never runs, none of this ever applies. */
+.js .hero-lead {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease) 2.6s, transform 0.8s var(--ease) 2.6s;
+}
+.js .scene-hero .hero-actions {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease) 2.8s, transform 0.8s var(--ease) 2.8s;
+}
+.js .scene-hero .hero-credential {
   opacity: 0;
   transition: opacity 0.8s var(--ease) 3.1s;
 }
@@ -1188,9 +1196,8 @@ figure.fig figcaption {
   position: relative;
   height: min(58vh, 560px);
   border-radius: 22px;
-  clip-path: inset(0 0 100% 0 round 22px);
-  transition: clip-path 1.3s var(--ease) 1.6s;
 }
+.js .hero-media { clip-path: inset(0 0 100% 0 round 22px); transition: clip-path 1.3s var(--ease) 1.6s; }
 .js .go .hero-media { clip-path: inset(0 0 0% 0 round 22px); }
 .hero-media .ph { inset: -8% 0; }
 
@@ -1207,9 +1214,8 @@ figure.fig figcaption {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   overflow: hidden;
-  clip-path: inset(0 0 100% 0 round 22px);
-  transition: clip-path 1.3s var(--ease) 1.6s;
 }
+.js .hero-figure { clip-path: inset(0 0 100% 0 round 22px); transition: clip-path 1.3s var(--ease) 1.6s; }
 .js .go .hero-figure { clip-path: inset(0 0 0% 0 round 22px); }
 .hero-figure .fig-svg { display: block; width: 100%; height: 100%; }
 
@@ -1323,8 +1329,8 @@ figure.fig figcaption {
   letter-spacing: 0;
   color: var(--muted);
   margin: 0;
-  opacity: 0;
 }
+.js .ceiling-left .stmt { opacity: 0; }
 /* The opening beat is short and punchy — give it the display treatment. */
 .ceiling-left .stmt-lead {
   max-width: 22ch;
@@ -1337,7 +1343,10 @@ figure.fig figcaption {
 }
 .ceiling-left .stmt em { font-style: normal; color: var(--accent-bright); }
 .ceiling-media { position: relative; height: min(64vh, 600px); border-radius: 22px; overflow: hidden; }
-.ceiling-media .cm { position: absolute; inset: 0; opacity: 0; will-change: opacity, transform; }
+.ceiling-media .cm { position: absolute; inset: 0; will-change: opacity, transform; }
+.js .ceiling-media .cm { opacity: 0; }
+/* No JS: the frames can't crossfade, so show only the first instead of stacking. */
+html:not(.js) .ceiling-media .cm:not(:first-child) { display: none; }
 .ceiling-media .cm .ph { inset: -6% 0; }
 
 /* --- full-bleed band --- */
@@ -1406,7 +1415,7 @@ figure.fig figcaption {
   border: none;
   padding: 0;
 }
-.quote-txt .w { opacity: 0.12; transition: opacity 0.18s linear; }
+.js .quote-txt .w { opacity: 0.12; transition: opacity 0.18s linear; }
 .quote-txt .w.lit { opacity: 1; }
 /* Brighter than --faint: this one sits over a lit photo, not the page ground. */
 .quote-attr { position: relative; margin-top: 2.2rem; font-size: 0.8rem; letter-spacing: 0.06em; color: var(--muted); }
@@ -1640,31 +1649,38 @@ body.article .related-card, body.blog-index .post-card, body.blog-index .feature
 
 
 /* ==========================================================================
-   Reduced motion — `.rm` static mode
+   Static mode — reduced motion (.rm) AND no-JS (html:not(.js))
    ==========================================================================
    Scenes unpin into ordinary stacked sections, everything is visible, the
    shader freezes on a single frame, the intro is removed, the header never
-   auto-hides. Content can never be trapped hidden. */
+   auto-hides. Content can never be trapped hidden.
 
-.rm .scene-hero, .rm .scene-ceiling, .rm .scene-quote { height: auto; }
-.rm .stick { position: static; height: auto; padding: 6rem 0; }
-.rm .ceiling-left { height: auto; }
-.rm .ceiling-left .stmt { position: static; transform: none; opacity: 1; margin-bottom: 2rem; }
-.rm .ceiling-media .cm { opacity: 1; }
-.rm .ceiling-media .cm:not(:first-child) { display: none; }
-.rm .hero-title .c, .rm .hero-lead, .rm .scene-hero .hero-actions, .rm .scene-hero .hero-credential {
+   The same rules serve BOTH cases on purpose. A pinned scene is 200-620vh of
+   sticky frame whose contents only become visible because cinema.js drives
+   them; if that script is absent, blocked or broken, the identical fallback the
+   reduced-motion user gets is exactly the right answer. `.js` is set in <head>
+   and stripped again by a 4s timer if cinema.js never finishes booting, so a
+   dead script lands here within 4 seconds rather than blanking the page. */
+
+:is(.rm, html:not(.js)) .scene-hero, :is(.rm, html:not(.js)) .scene-ceiling, :is(.rm, html:not(.js)) .scene-quote { height: auto; }
+:is(.rm, html:not(.js)) .stick { position: static; height: auto; padding: 6rem 0; }
+:is(.rm, html:not(.js)) .ceiling-left { height: auto; }
+:is(.rm, html:not(.js)) .ceiling-left .stmt { position: static; transform: none; opacity: 1; margin-bottom: 2rem; }
+:is(.rm, html:not(.js)) .ceiling-media .cm { opacity: 1; }
+:is(.rm, html:not(.js)) .ceiling-media .cm:not(:first-child) { display: none; }
+:is(.rm, html:not(.js)) .hero-title .c, :is(.rm, html:not(.js)) .hero-lead, :is(.rm, html:not(.js)) .scene-hero .hero-actions, :is(.rm, html:not(.js)) .scene-hero .hero-credential {
   opacity: 1; transform: none; filter: none; transition: none;
 }
-.rm .hero-media { clip-path: none; }
-.rm .quote-txt .w { opacity: 1; }
-.rm :is(.rv, .rv-l, .rv-r, .rv-zoom, .rv-wipe) { opacity: 1; transform: none; clip-path: none; filter: none; }
-.rm .reveal > *,
-.rm :is(.explore-grid, .post-grid, .related-grid, .grid, .steps, .cap-grid, .fit-cols) > * {
+:is(.rm, html:not(.js)) .hero-media { clip-path: none; }
+:is(.rm, html:not(.js)) .quote-txt .w { opacity: 1; }
+:is(.rm, html:not(.js)) :is(.rv, .rv-l, .rv-r, .rv-zoom, .rv-wipe) { opacity: 1; transform: none; clip-path: none; filter: none; }
+:is(.rm, html:not(.js)) .reveal > *,
+:is(.rm, html:not(.js)) :is(.explore-grid, .post-grid, .related-grid, .grid, .steps, .cap-grid, .fit-cols) > * {
   opacity: 1 !important; transform: none !important; clip-path: none !important; filter: none !important;
 }
-.rm .band, .rm .photo-section { clip-path: none !important; }
-.rm #intro, .rm .hero-progress { display: none; }
-.rm .site-header { transform: none !important; }
+:is(.rm, html:not(.js)) .band, :is(.rm, html:not(.js)) .photo-section { clip-path: none !important; }
+:is(.rm, html:not(.js)) #intro, :is(.rm, html:not(.js)) .hero-progress { display: none; }
+:is(.rm, html:not(.js)) .site-header { transform: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
