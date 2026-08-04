@@ -3,6 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    /* Set `.js` before first paint so initial hidden states never flash.
+       Everything hidden by CSS is gated behind this class, so a no-JS visitor
+       sees the full page. The timer is the safety net: if cinema.js fails to
+       load or throws before it finishes booting, `.js` comes back off and all
+       content becomes visible. cinema.js clears it on a clean boot. */
+    document.documentElement.classList.add('js');
+    window.__cinemaBoot = setTimeout(function () {
+      document.documentElement.classList.remove('js');
+    }, 4000);
+  </script>
   <title>Fractional B2C CMO: Marketing Leadership for Consumer Businesses | Daniel Fox</title>
   <meta name="description" content="A fractional B2C CMO runs the whole marketing function for established consumer businesses selling considered, high-ticket purchases. I work from one lens: why consumers buy. What the seat covers, who it fits, and how it works. Daniel Fox.">
   <meta name="robots" content="index, follow">
@@ -15,16 +26,27 @@
   <meta property="og:image" content="https://daniel-fox.com/img/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
 
+  <meta name="theme-color" content="#0c0a16">
+  <meta name="color-scheme" content="dark">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&family=PT+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <!-- Roman only, both families: the design forbids italics anywhere. -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=PT+Serif&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=20260614f">
+  <link rel="stylesheet" href="styles.css?v=20260804b">
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a fractional B2C CMO?", "acceptedAnswer": {"@type": "Answer", "text": "A fractional B2C CMO is a chief marketing officer who leads the marketing function for consumer businesses part-time, at executive level, with accountability for the revenue number. The B2C part is the point: the buyer is a person spending their own money on something they will live with, so the strategy, the message, and the channel choices all get built around why consumers buy. Daniel Fox is a fractional B2C CMO who works with established, profitable consumer businesses, typically $3 to $12M, selling considered, high-ticket purchases. Engagements start at $10,000 a month."}}, {"@type": "Question", "name": "How is leading B2C marketing different from B2B?", "acceptedAnswer": {"@type": "Answer", "text": "A B2C buyer at a high price point is a person spending household money, and the decision runs on confidence and feel as much as on comparison. They research for weeks, build a shortlist you never see, and commit when something makes them sure. Leading marketing for that buyer means reading the moment of choice: what they are actually weighing, what builds enough confidence to commit, and which story earns the shortlist. Positioning, content, search, and paid all get pointed at that moment rather than at a procurement process."}}, {"@type": "Question", "name": "Who does a fractional B2C CMO make sense for?", "acceptedAnswer": {"@type": "Answer", "text": "Established, profitable consumer businesses, typically $3 to $12M in revenue, that sell a considered, high-ticket purchase: a custom home, a premium service, a wellness program, anything a real person researches before choosing. Usually there is real marketing spend already in motion and no senior marketer deciding whether it is the right work. The fractional B2C CMO takes over that function and answers for what it produces."}}]}, {"@type": "Article", "headline": "What a fractional B2C CMO is, and who the seat fits", "description": "A fractional B2C CMO runs the whole marketing function for established consumer businesses selling considered, high-ticket purchases, built around one question: why consumers buy.", "author": {"@type": "Person", "name": "Daniel Fox", "url": "https://daniel-fox.com", "jobTitle": "Fractional B2C CMO"}, "publisher": {"@type": "Person", "name": "Daniel Fox"}, "datePublished": "2026-07-18", "dateModified": "2026-07-18"}]}</script>
   <script defer src="https://www.googletagmanager.com/gtag/js?id=G-FGSHJ5C5ZT"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FGSHJ5C5ZT');</script>
   
 </head>
 <body>
+  <!-- Animated background: WebGL smoke, its no-WebGL gradient fallback, film
+       grain, and the veil that quiets all of it on long-form reading pages. -->
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="gl-fallback" id="glfb" aria-hidden="true" style="display:none"></div>
+  <div class="read-veil" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
   <header class="site-header">
   <div class="container header-inner">
     <a class="wordmark" href="/">Daniel Fox</a>
@@ -45,7 +67,6 @@
     <section class="hero photo-section photo-hero" data-parallax>
   <div class="photo-bg" style="background-image:url('img/photos/band-boutique.jpg')"></div>
   <div class="container">
-    <p class="eyebrow">Marketing leadership for consumer businesses</p>
     <h1>I'm a fractional <span class="accent">B2C</span> CMO.</h1>
     <p class="capsule">I'm Daniel Fox. I run the marketing function for established consumer businesses, typically $3 to $12M, that sell a considered, high-ticket purchase. The whole practice sits on one question: why consumers buy. Every strategy, channel, and dollar decision is downstream of getting that answer right.</p>
     <div class="byline">
@@ -82,7 +103,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">Keep reading</p>
     <div class="related-grid">
       <a class="related-card" href="who-its-for.html">
         <span class="related-kicker">The full fit check</span>
@@ -127,62 +147,6 @@
 </footer>
 
 
-  <script>
-    // Mobile nav toggle
-    (function () {
-      var btn = document.querySelector('.nav-toggle');
-      var links = document.querySelector('.nav-links');
-      if (btn && links) {
-        btn.addEventListener('click', function () {
-          var open = links.classList.toggle('open');
-          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-      }
-    })();
-    // Reveal on scroll -with a hard failsafe so content can never stay hidden.
-    (function () {
-      var els = document.querySelectorAll('.reveal');
-      if (!els.length) { return; }
-      function showAll() { els.forEach(function (el) { el.classList.add('in'); }); }
-      if (!('IntersectionObserver' in window)) { showAll(); return; }
-      // threshold 0: reveal as soon as any part enters -works for elements taller than the viewport.
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        });
-      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
-      els.forEach(function (el) { io.observe(el); });
-      // Failsafe: reveal anything still hidden shortly after load, regardless of observer behavior.
-      window.addEventListener('load', function () { setTimeout(showAll, 1200); });
-    })();
-    // Subtle parallax on full-bleed photo bands -desktop pointer devices only, and never
-    // when the user prefers reduced motion. The .photo-bg layer is inset 9% top/bottom, so a
-    // translate up to ~9% of its height never bares an edge.
-    (function () {
-      var fine = window.matchMedia('(min-width: 921px) and (hover: hover) and (pointer: fine)');
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (!fine.matches || reduce.matches) { return; }
-      var layers = [].slice.call(document.querySelectorAll('.photo-section .photo-bg'));
-      if (!layers.length) { return; }
-      var ticking = false;
-      function update() {
-        var vh = window.innerHeight;
-        for (var i = 0; i < layers.length; i++) {
-          var sec = layers[i].parentElement;
-          var r = sec.getBoundingClientRect();
-          if (r.bottom < -100 || r.top > vh + 100) { continue; }
-          // -1 (section below view) .. +1 (above view); 0 when centered.
-          var prog = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
-          if (prog < -1) { prog = -1; } else if (prog > 1) { prog = 1; }
-          layers[i].style.transform = 'translate3d(0,' + (prog * r.height * 0.08).toFixed(1) + 'px,0)';
-        }
-        ticking = false;
-      }
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      update();
-    })();
-  </script>
+  <script defer src="cinema.js?v=20260804b"></script>
 </body>
 </html>

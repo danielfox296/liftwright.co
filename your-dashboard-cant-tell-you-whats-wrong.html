@@ -3,6 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    /* Set `.js` before first paint so initial hidden states never flash.
+       Everything hidden by CSS is gated behind this class, so a no-JS visitor
+       sees the full page. The timer is the safety net: if cinema.js fails to
+       load or throws before it finishes booting, `.js` comes back off and all
+       content becomes visible. cinema.js clears it on a clean boot. */
+    document.documentElement.classList.add('js');
+    window.__cinemaBoot = setTimeout(function () {
+      document.documentElement.classList.remove('js');
+    }, 4000);
+  </script>
   <title>Your Dashboard Can&#x27;t Tell You What&#x27;s Wrong | Daniel Fox</title>
   <meta name="description" content="Declining return on ad spend has three different causes and one identical-looking graph. Why analytics flag the symptom, and where the real diagnosis actually happens.">
   <meta name="robots" content="index, follow">
@@ -15,16 +26,27 @@
   <meta property="og:image" content="https://daniel-fox.com/img/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
 
+  <meta name="theme-color" content="#0c0a16">
+  <meta name="color-scheme" content="dark">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&family=PT+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <!-- Roman only, both families: the design forbids italics anywhere. -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=PT+Serif&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=20260614f">
+  <link rel="stylesheet" href="styles.css?v=20260804b">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Your dashboard can tell you something is wrong. It can't tell you what.", "description": "Declining return on ad spend has three different causes and one identical-looking graph. Why analytics flag the symptom, and where the real diagnosis happens.", "author": {"@type": "Person", "name": "Daniel Fox"}, "publisher": {"@type": "Person", "name": "Daniel Fox"}, "datePublished": "2026-06-11", "dateModified": "2026-06-11"}</script>
   <script defer src="https://www.googletagmanager.com/gtag/js?id=G-FGSHJ5C5ZT"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FGSHJ5C5ZT');</script>
   
 </head>
 <body class="article">
+  <!-- Animated background: WebGL smoke, its no-WebGL gradient fallback, film
+       grain, and the veil that quiets all of it on long-form reading pages. -->
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="gl-fallback" id="glfb" aria-hidden="true" style="display:none"></div>
+  <div class="read-veil" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
   <header class="site-header">
   <div class="container header-inner">
     <a class="wordmark" href="/">Daniel Fox</a>
@@ -45,7 +67,6 @@
     <section class="hero photo-section photo-hero" data-parallax>
   <div class="photo-bg" style="background-image:url('img/photos/band-trading-dark.jpg')"></div>
   <div class="container">
-    <p class="eyebrow">Reading your numbers right</p>
     <h1>Your dashboard can tell you something is wrong. <span class="accent">It can't tell you what.</span></h1>
     <p class="lead">Run a thought experiment on your own ad account. Take your best-performing campaign, the one aimed squarely at the customers who got you here, and imagine pouring an infinite budget into it. Does the return on that spend hold? It doesn't, and everyone knows it doesn't. Returns decline as spend scales. The interesting question is what the decline means, because the shape of that curve is one of the clearest signals a growing company gets, and most teams misread it.</p>
   </div>
@@ -53,7 +74,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">One declining line, three different problems</p>
     <h2 class="measure">A falling return-on-ad-spend curve can mean three completely different things.</h2>
     <p class="lead measure-wide">In an earlier piece I looked at why the segment that carried you to your first few million is finite, and usually smaller than it feels. Segment exhaustion is one candidate explanation for a sliding return on spend.</p>
     <div class="measure-wide" style="margin-top:1.5rem">
@@ -66,7 +86,6 @@
 
 <section class="section">
   <div class="container reveal">
-    <p class="eyebrow">The cost of misreading it</p>
     <h2 class="measure">Tap the wrong explanation and you fix the wrong thing.</h2>
     <div class="measure-wide" style="margin-top:1.5rem">
       <p>The same declining line can mean your segment is tapped, your market got more expensive, or your delivery is leaking trust somewhere between the promise and the experience. Three different problems. Three completely different responses.</p>
@@ -79,7 +98,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">Where diagnosis actually happens</p>
     <h2 class="measure">The work is older and less glamorous than the tooling that has grown up around it.</h2>
     <p class="lead measure-wide">The diagnosis happens on the ground. It happens in conversations with actual buyers, and with the people who almost bought and didn't, about what they wanted, what they expected, and where the experience diverged from the promise.</p>
     <div class="measure-wide" style="margin-top:1.5rem">
@@ -92,7 +110,6 @@
 
 <section class="section">
   <div class="container reveal">
-    <p class="eyebrow">What the teams that handle it well do differently</p>
     <h2 class="measure">When the numbers turn ambiguous, treat the dashboard as the beginning of the question.</h2>
     <div class="measure-wide" style="margin-top:1.5rem">
       <p>The teams that handle the transition well tend to share one habit. Someone senior gets on calls with customers. Someone reads every churn reason written in the customer's own words. Someone walks the entire delivery of the value proposition, from first impression to renewal, looking for the place where confidence drains out.</p>
@@ -104,7 +121,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">What your dashboard is honest about</p>
     <h2 class="measure">It will show you the decline the day it starts.</h2>
     <div class="measure-wide" style="margin-top:1.5rem">
       <p>Your dashboard is honest. It will show you the decline the day it starts. Just don't ask it for the diagnosis, because it's reporting on a conversation it was never part of.</p>
@@ -114,7 +130,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">Part two of four</p>
     <h2 class="measure">Where this sits in the series.</h2>
     <div class="measure-wide" style="margin-top:1rem">
       <p>This is the second piece. It follows <a href="product-market-fit-has-a-ceiling.html">why the product-market fit you found has a ceiling</a>. Next: <a href="the-small-tweak-that-opens-the-next-market.html">the small tweak that opens the next market</a>.</p>
@@ -125,7 +140,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">Questions this raises</p>
     <div class="related-grid">
       <a class="related-card" href="why-is-my-roas-declining.html">
         <span class="related-kicker">Quick answer</span>
@@ -171,62 +185,6 @@
 </footer>
 
 
-  <script>
-    // Mobile nav toggle
-    (function () {
-      var btn = document.querySelector('.nav-toggle');
-      var links = document.querySelector('.nav-links');
-      if (btn && links) {
-        btn.addEventListener('click', function () {
-          var open = links.classList.toggle('open');
-          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-      }
-    })();
-    // Reveal on scroll -with a hard failsafe so content can never stay hidden.
-    (function () {
-      var els = document.querySelectorAll('.reveal');
-      if (!els.length) { return; }
-      function showAll() { els.forEach(function (el) { el.classList.add('in'); }); }
-      if (!('IntersectionObserver' in window)) { showAll(); return; }
-      // threshold 0: reveal as soon as any part enters -works for elements taller than the viewport.
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        });
-      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
-      els.forEach(function (el) { io.observe(el); });
-      // Failsafe: reveal anything still hidden shortly after load, regardless of observer behavior.
-      window.addEventListener('load', function () { setTimeout(showAll, 1200); });
-    })();
-    // Subtle parallax on full-bleed photo bands -desktop pointer devices only, and never
-    // when the user prefers reduced motion. The .photo-bg layer is inset 9% top/bottom, so a
-    // translate up to ~9% of its height never bares an edge.
-    (function () {
-      var fine = window.matchMedia('(min-width: 921px) and (hover: hover) and (pointer: fine)');
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (!fine.matches || reduce.matches) { return; }
-      var layers = [].slice.call(document.querySelectorAll('.photo-section .photo-bg'));
-      if (!layers.length) { return; }
-      var ticking = false;
-      function update() {
-        var vh = window.innerHeight;
-        for (var i = 0; i < layers.length; i++) {
-          var sec = layers[i].parentElement;
-          var r = sec.getBoundingClientRect();
-          if (r.bottom < -100 || r.top > vh + 100) { continue; }
-          // -1 (section below view) .. +1 (above view); 0 when centered.
-          var prog = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
-          if (prog < -1) { prog = -1; } else if (prog > 1) { prog = 1; }
-          layers[i].style.transform = 'translate3d(0,' + (prog * r.height * 0.08).toFixed(1) + 'px,0)';
-        }
-        ticking = false;
-      }
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      update();
-    })();
-  </script>
+  <script defer src="cinema.js?v=20260804b"></script>
 </body>
 </html>

@@ -3,6 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    /* Set `.js` before first paint so initial hidden states never flash.
+       Everything hidden by CSS is gated behind this class, so a no-JS visitor
+       sees the full page. The timer is the safety net: if cinema.js fails to
+       load or throws before it finishes booting, `.js` comes back off and all
+       content becomes visible. cinema.js clears it on a clean boot. */
+    document.documentElement.classList.add('js');
+    window.__cinemaBoot = setTimeout(function () {
+      document.documentElement.classList.remove('js');
+    }, 4000);
+  </script>
   <title>How to Generate Leads Beyond Referrals | Daniel Fox</title>
   <meta name="description" content="Real lead generation for high-ticket businesses (beyond referrals and luck), and why a fenced channel you can measure is the one that scales. A fractional B2C CMO&#x27;s view.">
   <meta name="robots" content="index, follow">
@@ -15,16 +26,27 @@
   <meta property="og:image" content="https://daniel-fox.com/img/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
 
+  <meta name="theme-color" content="#0c0a16">
+  <meta name="color-scheme" content="dark">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&family=PT+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <!-- Roman only, both families: the design forbids italics anywhere. -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=PT+Serif&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=20260614f">
+  <link rel="stylesheet" href="styles.css?v=20260804b">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to generate leads beyond referrals for a high-ticket business", "description": "Real lead generation for high-ticket businesses (beyond referrals and luck), and why a fenced channel you can measure is the one that scales.", "author": {"@type": "Person", "name": "Daniel Fox"}, "publisher": {"@type": "Person", "name": "Daniel Fox"}, "mainEntity": {"@type": "Question", "name": "How do I generate predictable leads for my high-ticket business beyond referrals?", "acceptedAnswer": {"@type": "Answer", "text": "Build at least one net-new source of demand you can measure and attribute (authority content, search visibility, lead capture, and nurture aimed at a weeks-long decision) running alongside referrals rather than depending on them. Pace that demand to your real capacity so you generate work you can actually deliver, and put one accountable leader in charge of the whole channel."}}, "datePublished": "2026-06-09", "dateModified": "2026-06-11"}</script>
   <script defer src="https://www.googletagmanager.com/gtag/js?id=G-FGSHJ5C5ZT"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FGSHJ5C5ZT');</script>
   
 </head>
 <body>
+  <!-- Animated background: WebGL smoke, its no-WebGL gradient fallback, film
+       grain, and the veil that quiets all of it on long-form reading pages. -->
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="gl-fallback" id="glfb" aria-hidden="true" style="display:none"></div>
+  <div class="read-veil" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
   <header class="site-header">
   <div class="container header-inner">
     <a class="wordmark" href="/">Daniel Fox</a>
@@ -45,7 +67,6 @@
     <section class="hero photo-section photo-hero" data-parallax>
   <div class="photo-bg" style="background-image:url('img/photos/band-city-night.jpg')"></div>
   <div class="container">
-    <p class="eyebrow">Lead generation beyond referrals</p>
     <h1>How to generate leads <span class="accent">beyond referrals.</span></h1>
     <p class="lead">Referrals are the best lead source you have, right up until the month they go flat and you have nothing behind them. This is how a high-ticket business builds a lead channel it can count on, instead of one it hopes shows up.</p>
     <div class="hero-actions">
@@ -57,7 +78,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">Why the usual answers stall</p>
     <h2 class="measure">Referrals don't scale, and ads alone don't convert a researched buyer.</h2>
     <p class="lead measure-wide">A high-ticket purchase is a considered one. Nobody commits to it on impulse: they research for weeks or months, compare a short list, and only then ask anyone for a quote. The two things most owners reach for (lean harder on referrals, or pour money into ads) both run into that reality from opposite sides.</p>
     <div class="grid grid-3" style="margin-top:2.5rem">
@@ -79,7 +99,6 @@
 
 <section class="section section-panel" id="the-path">
   <div class="container reveal">
-    <p class="eyebrow">The path from stranger to quote request</p>
     <h2 class="measure">Four jobs, each doing real work across a weeks-long decision.</h2>
     <p class="lead measure-wide">Lead generation for a considered purchase is a sequence, a connected set of moves that meets the buyer where they actually are: researching alone, comparing in private, and deciding slowly. Each piece below has a specific job, and the channel only works when all four are present and connected.</p>
     <div class="grid grid-2" style="margin-top:2.5rem">
@@ -94,7 +113,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">The fenced channel</p>
     <h2 class="measure">Build at least one source of demand you can point to and prove.</h2>
     <p class="lead measure-wide">The goal is to add something next to your referrals while keeping them: a net-new source of leads that exists whether or not last quarter's clients happened to talk you up, and that you can attribute on its own. I call it a fenced channel because its results are walled off from referrals and from season, so you can see what it actually produced.</p>
     <div class="measure-wide" style="margin-top:1.5rem">
@@ -107,7 +125,6 @@
 
 <section class="section section-panel">
   <div class="container reveal">
-    <p class="eyebrow">Capacity first</p>
     <h2 class="measure">Generating demand you can't fulfill breaks you.</h2>
     <p class="lead measure-wide">A high-ticket business is capacity-constrained in a way most marketing advice ignores. You can only take on so many engagements, ship so many projects, serve so many clients well at once. Lead generation that outruns your delivery doesn't help you. It floods your calendar with quotes you can't honor, pushes out timelines, and trains good prospects to go find someone who can start.</p>
     <div class="measure-wide" style="margin-top:1.5rem">
@@ -120,7 +137,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">Why it only compounds with one leader</p>
     <h2 class="measure">Four jobs, one conductor, or four disconnected efforts.</h2>
     <p class="lead measure-wide">Authority, search, capture, and nurture only become a channel when one person leads how they fit together. Hand the blog to one freelancer, the ads to an agency, the website to whoever built it, and the follow-up to nobody, and you end up with four invoices and a gap where the strategy should be.</p>
     <div class="measure-wide" style="margin-top:1.5rem">
@@ -161,62 +177,6 @@
 </footer>
 
 
-  <script>
-    // Mobile nav toggle
-    (function () {
-      var btn = document.querySelector('.nav-toggle');
-      var links = document.querySelector('.nav-links');
-      if (btn && links) {
-        btn.addEventListener('click', function () {
-          var open = links.classList.toggle('open');
-          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-      }
-    })();
-    // Reveal on scroll -with a hard failsafe so content can never stay hidden.
-    (function () {
-      var els = document.querySelectorAll('.reveal');
-      if (!els.length) { return; }
-      function showAll() { els.forEach(function (el) { el.classList.add('in'); }); }
-      if (!('IntersectionObserver' in window)) { showAll(); return; }
-      // threshold 0: reveal as soon as any part enters -works for elements taller than the viewport.
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        });
-      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
-      els.forEach(function (el) { io.observe(el); });
-      // Failsafe: reveal anything still hidden shortly after load, regardless of observer behavior.
-      window.addEventListener('load', function () { setTimeout(showAll, 1200); });
-    })();
-    // Subtle parallax on full-bleed photo bands -desktop pointer devices only, and never
-    // when the user prefers reduced motion. The .photo-bg layer is inset 9% top/bottom, so a
-    // translate up to ~9% of its height never bares an edge.
-    (function () {
-      var fine = window.matchMedia('(min-width: 921px) and (hover: hover) and (pointer: fine)');
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (!fine.matches || reduce.matches) { return; }
-      var layers = [].slice.call(document.querySelectorAll('.photo-section .photo-bg'));
-      if (!layers.length) { return; }
-      var ticking = false;
-      function update() {
-        var vh = window.innerHeight;
-        for (var i = 0; i < layers.length; i++) {
-          var sec = layers[i].parentElement;
-          var r = sec.getBoundingClientRect();
-          if (r.bottom < -100 || r.top > vh + 100) { continue; }
-          // -1 (section below view) .. +1 (above view); 0 when centered.
-          var prog = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
-          if (prog < -1) { prog = -1; } else if (prog > 1) { prog = 1; }
-          layers[i].style.transform = 'translate3d(0,' + (prog * r.height * 0.08).toFixed(1) + 'px,0)';
-        }
-        ticking = false;
-      }
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      update();
-    })();
-  </script>
+  <script defer src="cinema.js?v=20260804b"></script>
 </body>
 </html>

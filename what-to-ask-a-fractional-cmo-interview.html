@@ -3,6 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    /* Set `.js` before first paint so initial hidden states never flash.
+       Everything hidden by CSS is gated behind this class, so a no-JS visitor
+       sees the full page. The timer is the safety net: if cinema.js fails to
+       load or throws before it finishes booting, `.js` comes back off and all
+       content becomes visible. cinema.js clears it on a clean boot. */
+    document.documentElement.classList.add('js');
+    window.__cinemaBoot = setTimeout(function () {
+      document.documentElement.classList.remove('js');
+    }, 4000);
+  </script>
   <title>What to Ask a Fractional CMO in an Interview | Daniel Fox</title>
   <meta name="description" content="Skip the resume questions. Every question that matters in a fractional CMO interview tests one thing: does this person diagnose before they prescribe? A practical checklist from Daniel Fox, fractional B2C CMO.">
   <meta name="robots" content="index, follow">
@@ -15,16 +26,27 @@
   <meta property="og:image" content="https://daniel-fox.com/img/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
 
+  <meta name="theme-color" content="#0c0a16">
+  <meta name="color-scheme" content="dark">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&family=PT+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <!-- Roman only, both families: the design forbids italics anywhere. -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=PT+Serif&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=20260614f">
+  <link rel="stylesheet" href="styles.css?v=20260804b">
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What should I ask a fractional CMO in an interview?", "acceptedAnswer": {"@type": "Answer", "text": "Skip the resume questions. Every question that matters tests one thing: does this person diagnose before they prescribe? Anyone who tells you the first thing they would do before they have looked at your creative, your analytics, and your current positioning is selling a playbook, because from outside the company that data is opaque. Ask what happens in month one and listen for a baseline and customer conversations, not a week-one to-do list. Ask what they refuse to do, because a CMO who refuses nothing does not know the edges of their own capabilities or is over-promising to win a bad-fit job. Ask what they actually believe, because a CMO with no positions you could disagree with has no positions at all. Daniel Fox is a fractional B2C CMO who works this way."}}]}, {"@type": "Article", "headline": "What should I ask a fractional CMO in an interview?", "description": "Skip the resume questions. Every question worth asking a fractional CMO tests whether they diagnose before they prescribe, refuse the right work, and hold real positions.", "author": {"@type": "Person", "name": "Daniel Fox", "url": "https://daniel-fox.com", "jobTitle": "Fractional B2C CMO"}, "publisher": {"@type": "Person", "name": "Daniel Fox"}, "datePublished": "2026-06-12", "dateModified": "2026-06-12"}]}</script>
   <script defer src="https://www.googletagmanager.com/gtag/js?id=G-FGSHJ5C5ZT"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FGSHJ5C5ZT');</script>
   
 </head>
 <body>
+  <!-- Animated background: WebGL smoke, its no-WebGL gradient fallback, film
+       grain, and the veil that quiets all of it on long-form reading pages. -->
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="gl-fallback" id="glfb" aria-hidden="true" style="display:none"></div>
+  <div class="read-veil" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
   <header class="site-header">
   <div class="container header-inner">
     <a class="wordmark" href="/">Daniel Fox</a>
@@ -45,7 +67,6 @@
     <section class="hero photo-section photo-hero" data-parallax>
   <div class="photo-bg" style="background-image:url('img/photos/boardroom-listening.jpg')"></div>
   <div class="container">
-    <p class="eyebrow">Before you hire</p>
     <h1>What should I ask a fractional CMO in an interview?</h1>
     <p class="capsule">Skip the resume questions. Every question that matters tests one thing: does this person diagnose before they prescribe? I'm Daniel Fox, a fractional B2C CMO. Anyone who tells you the first thing they would do, before they have seen your creative, your analytics, and your positioning, is selling a playbook. Ask the questions that surface judgment instead of a rehearsed plan.</p>
     <div class="byline">
@@ -90,7 +111,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">Keep reading</p>
     <div class="related-grid">
       <a class="related-card" href="beliefs.html">
         <span class="related-kicker">What I hold to be true</span>
@@ -135,62 +155,6 @@
 </footer>
 
 
-  <script>
-    // Mobile nav toggle
-    (function () {
-      var btn = document.querySelector('.nav-toggle');
-      var links = document.querySelector('.nav-links');
-      if (btn && links) {
-        btn.addEventListener('click', function () {
-          var open = links.classList.toggle('open');
-          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-      }
-    })();
-    // Reveal on scroll -with a hard failsafe so content can never stay hidden.
-    (function () {
-      var els = document.querySelectorAll('.reveal');
-      if (!els.length) { return; }
-      function showAll() { els.forEach(function (el) { el.classList.add('in'); }); }
-      if (!('IntersectionObserver' in window)) { showAll(); return; }
-      // threshold 0: reveal as soon as any part enters -works for elements taller than the viewport.
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        });
-      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
-      els.forEach(function (el) { io.observe(el); });
-      // Failsafe: reveal anything still hidden shortly after load, regardless of observer behavior.
-      window.addEventListener('load', function () { setTimeout(showAll, 1200); });
-    })();
-    // Subtle parallax on full-bleed photo bands -desktop pointer devices only, and never
-    // when the user prefers reduced motion. The .photo-bg layer is inset 9% top/bottom, so a
-    // translate up to ~9% of its height never bares an edge.
-    (function () {
-      var fine = window.matchMedia('(min-width: 921px) and (hover: hover) and (pointer: fine)');
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (!fine.matches || reduce.matches) { return; }
-      var layers = [].slice.call(document.querySelectorAll('.photo-section .photo-bg'));
-      if (!layers.length) { return; }
-      var ticking = false;
-      function update() {
-        var vh = window.innerHeight;
-        for (var i = 0; i < layers.length; i++) {
-          var sec = layers[i].parentElement;
-          var r = sec.getBoundingClientRect();
-          if (r.bottom < -100 || r.top > vh + 100) { continue; }
-          // -1 (section below view) .. +1 (above view); 0 when centered.
-          var prog = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
-          if (prog < -1) { prog = -1; } else if (prog > 1) { prog = 1; }
-          layers[i].style.transform = 'translate3d(0,' + (prog * r.height * 0.08).toFixed(1) + 'px,0)';
-        }
-        ticking = false;
-      }
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      update();
-    })();
-  </script>
+  <script defer src="cinema.js?v=20260804b"></script>
 </body>
 </html>

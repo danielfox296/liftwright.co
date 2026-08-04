@@ -9,6 +9,7 @@ Pure Python stdlib — no dependencies, no npm, no bundler.
 import html
 import json
 import pathlib
+import re
 
 ROOT = pathlib.Path(__file__).parent
 SRC = ROOT / "_src"
@@ -23,6 +24,15 @@ OG_IMAGE = f"{SITE_URL}/img/og-default.png"
 # to mark the matching header link as the current page. Insights cluster (index + pillar +
 # spokes) all use "insights" so the section stays lit while reading any piece of it.
 NAV_KEYS = ["what-we-run", "who-its-for", "about", "insights", "contact"]
+
+# Eyebrow kickers (small uppercase tracked labels above a headline) are off under the
+# 2026-08-04 Cinema design — "headlines carry the sections". They are STRIPPED here at
+# build time rather than hidden with CSS: `display:none` left ~475 words of real copy
+# sitting in the HTML as hidden text, which search engines discount and which reads as
+# a (mild) cloaking signal at that volume. The copy itself stays untouched in _src, so
+# flipping this back to True restores every one of them.
+SHOW_EYEBROWS = False
+EYEBROW_RE = re.compile(r'[ \t]*<p class="eyebrow">.*?</p>\n?', re.DOTALL)
 
 # GA4 property under the "Daniel Fox" Analytics account (acct 121066079), measurement id
 # carried over unchanged when the site moved from liftwright.co to daniel-fox.com.
@@ -132,6 +142,8 @@ def build_page(page_dir: pathlib.Path) -> dict | None:
     section_dir = page_dir / "sections"
     sections = sorted(section_dir.glob("*.html")) if section_dir.exists() else []
     content = "\n".join(read(s) for s in sections)
+    if not SHOW_EYEBROWS:
+        content = EYEBROW_RE.sub("", content)
 
     page_css = ""
     css_file = page_dir / "style.css"

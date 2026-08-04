@@ -3,6 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    /* Set `.js` before first paint so initial hidden states never flash.
+       Everything hidden by CSS is gated behind this class, so a no-JS visitor
+       sees the full page. The timer is the safety net: if cinema.js fails to
+       load or throws before it finishes booting, `.js` comes back off and all
+       content becomes visible. cinema.js clears it on a clean boot. */
+    document.documentElement.classList.add('js');
+    window.__cinemaBoot = setTimeout(function () {
+      document.documentElement.classList.remove('js');
+    }, 4000);
+  </script>
   <title>Is a Fractional B2C CMO Right for Your Business? | Daniel Fox</title>
   <meta name="description" content="When a fractional B2C CMO is the right call for an established consumer business with a considered, high-ticket purchase, and when it isn&#x27;t. A plain, honest fit check.">
   <meta name="robots" content="index, follow">
@@ -15,16 +26,27 @@
   <meta property="og:image" content="https://daniel-fox.com/img/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
 
+  <meta name="theme-color" content="#0c0a16">
+  <meta name="color-scheme" content="dark">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400&family=PT+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <!-- Roman only, both families: the design forbids italics anywhere. -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=PT+Serif&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=20260614f">
+  <link rel="stylesheet" href="styles.css?v=20260804b">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "name": "Daniel Fox", "url": "https://daniel-fox.com", "image": "https://daniel-fox.com/img/daniel-fox.jpg", "sameAs": ["https://www.linkedin.com/in/danielcfox/"], "jobTitle": "Fractional B2C CMO", "address": {"@type": "PostalAddress", "addressLocality": "Denver", "addressRegion": "CO", "addressCountry": "US"}, "areaServed": "US", "description": "Fractional B2C CMO and marketing leadership for established, profitable consumer businesses with considered, high-ticket purchases. I run the whole marketing function, strategy through pipeline, and answer for the number.", "alumniOf": {"@type": "CollegeOrUniversity", "name": "The Ohio State University"}, "knowsAbout": ["Fractional CMO services", "B2C and consumer-brand marketing", "Marketing leadership", "Demand generation", "Positioning", "Go-to-market strategy", "High-ticket and considered-purchase marketing"]}</script>
   <script defer src="https://www.googletagmanager.com/gtag/js?id=G-FGSHJ5C5ZT"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FGSHJ5C5ZT');</script>
   
 </head>
 <body>
+  <!-- Animated background: WebGL smoke, its no-WebGL gradient fallback, film
+       grain, and the veil that quiets all of it on long-form reading pages. -->
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="gl-fallback" id="glfb" aria-hidden="true" style="display:none"></div>
+  <div class="read-veil" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
   <header class="site-header">
   <div class="container header-inner">
     <a class="wordmark" href="/">Daniel Fox</a>
@@ -45,7 +67,6 @@
     <section class="hero photo-section photo-hero" data-parallax>
   <div class="photo-bg" style="background-image:url('img/photos/band-workshop.jpg')"></div>
   <div class="container">
-    <p class="eyebrow">Who it's for</p>
     <h1>I built this for <span class="accent">one shape</span> of business.</h1>
     <p class="lead">I run the marketing for considered, high-ticket purchases: the businesses that get chosen <em>after</em> the customer does their research. That's where strategy, content, search, and nurture actually compound. It's the wrong tool for an impulse buy.</p>
   </div>
@@ -53,7 +74,6 @@
 
 <section class="section section-line">
   <div class="container reveal">
-    <p class="eyebrow">The short version</p>
     <p class="lead measure-wide">I work with established, profitable consumer businesses, typically $3&ndash;12M, who've outgrown referral-and-marketplace luck and want it handled, not added to their plate. B2C here means your buyer is a person, not a procurement department: a custom home, a wellness program, any considered purchase a real person researches before choosing. I'm not a great fit for pre-revenue startups, owners shopping for the cheapest freelancer, or anyone who wants a vendor to manage rather than a leader to hand it to.</p>
     <p class="measure-wide" style="margin-top:1.25rem">Not sure which side you're on? <a href="do-i-need-a-fractional-cmo-or-an-agency.html">Do you need a fractional CMO or an agency</a> sorts it in two minutes. And if your buyer is a consumer, the full version of that argument lives on the <a href="fractional-b2c-cmo.html">fractional B2C CMO</a> page.</p>
   </div>
@@ -61,7 +81,6 @@
 
 <section class="section section-panel">
   <div class="container reveal">
-    <p class="eyebrow">The honest fit check</p>
     <h2 class="measure">Where I'm the right tool, and where I'm the wrong one.</h2>
     <div class="fit-cols" style="margin-top:2.5rem">
       <div class="fit-col">
@@ -119,62 +138,6 @@
 </footer>
 
 
-  <script>
-    // Mobile nav toggle
-    (function () {
-      var btn = document.querySelector('.nav-toggle');
-      var links = document.querySelector('.nav-links');
-      if (btn && links) {
-        btn.addEventListener('click', function () {
-          var open = links.classList.toggle('open');
-          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-      }
-    })();
-    // Reveal on scroll -with a hard failsafe so content can never stay hidden.
-    (function () {
-      var els = document.querySelectorAll('.reveal');
-      if (!els.length) { return; }
-      function showAll() { els.forEach(function (el) { el.classList.add('in'); }); }
-      if (!('IntersectionObserver' in window)) { showAll(); return; }
-      // threshold 0: reveal as soon as any part enters -works for elements taller than the viewport.
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        });
-      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
-      els.forEach(function (el) { io.observe(el); });
-      // Failsafe: reveal anything still hidden shortly after load, regardless of observer behavior.
-      window.addEventListener('load', function () { setTimeout(showAll, 1200); });
-    })();
-    // Subtle parallax on full-bleed photo bands -desktop pointer devices only, and never
-    // when the user prefers reduced motion. The .photo-bg layer is inset 9% top/bottom, so a
-    // translate up to ~9% of its height never bares an edge.
-    (function () {
-      var fine = window.matchMedia('(min-width: 921px) and (hover: hover) and (pointer: fine)');
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (!fine.matches || reduce.matches) { return; }
-      var layers = [].slice.call(document.querySelectorAll('.photo-section .photo-bg'));
-      if (!layers.length) { return; }
-      var ticking = false;
-      function update() {
-        var vh = window.innerHeight;
-        for (var i = 0; i < layers.length; i++) {
-          var sec = layers[i].parentElement;
-          var r = sec.getBoundingClientRect();
-          if (r.bottom < -100 || r.top > vh + 100) { continue; }
-          // -1 (section below view) .. +1 (above view); 0 when centered.
-          var prog = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
-          if (prog < -1) { prog = -1; } else if (prog > 1) { prog = 1; }
-          layers[i].style.transform = 'translate3d(0,' + (prog * r.height * 0.08).toFixed(1) + 'px,0)';
-        }
-        ticking = false;
-      }
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      update();
-    })();
-  </script>
+  <script defer src="cinema.js?v=20260804b"></script>
 </body>
 </html>
