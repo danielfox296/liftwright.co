@@ -24,6 +24,28 @@
   var isHome = body.classList.contains('home');
   var isRead = body.classList.contains('article') || body.classList.contains('blog-index');
 
+  /* Pinned scenes need a viewport tall enough to hold a whole scene at once.
+     Phones do not have one, and their collapsing toolbars make 100vh a moving
+     target, so below 900px the scenes unpin and behave exactly as they do under
+     prefers-reduced-motion. `.static-scenes` is what the stylesheet keys off. */
+  var mqSmall = window.matchMedia('(max-width: 900px)');
+  function scenesStatic() { return reduce || mqSmall.matches; }
+  function syncStatic() {
+    var stat = scenesStatic();
+    doc.classList.toggle('static-scenes', stat);
+    if (!stat) { return; }
+    // Drop any inline values the scroll loop wrote before the viewport shrank,
+    // so the static rules are not fighting stale opacity/transform.
+    var sel = '#s-ceiling .stmt, #ceilMedia .cm, #heroInner, #heroPh, #qPhoto';
+    document.querySelectorAll(sel).forEach(function (e) {
+      ['opacity', 'transform'].forEach(function (prop) { e.style.removeProperty(prop); });
+    });
+    document.querySelectorAll('.quote-txt .w').forEach(function (w) { w.classList.add('lit'); });
+  }
+  syncStatic();
+  if (mqSmall.addEventListener) { mqSmall.addEventListener('change', syncStatic); }
+  else if (mqSmall.addListener) { mqSmall.addListener(syncStatic); }
+
   /* ====================================================================
      WebGL smoke — purple, half devicePixel scale, ~60fps
      ==================================================================== */
@@ -47,8 +69,8 @@
       'float m1=fbm(q*1.4+vec2(t*.10,-t*.065));' +
       'float m2=fbm(q*2.2+vec2(-t*.075,t*.085)+m1*1.4);' +
       'float band=smoothstep(.32,.85,fbm(q*1.1+vec2(t*.05,0.)+m2));' +
-      'vec3 base=vec3(.047,.039,.086);' +
-      'vec3 c1=vec3(.553,.42,1.0);vec3 c2=vec3(.753,.518,.988);' +
+      'vec3 base=vec3(.040,.035,.066);' +
+      'vec3 c1=vec3(.42,.34,.57);vec3 c2=vec3(.49,.42,.63);' +
       'float glow1=band*smoothstep(1.15,.15,distance(uv,vec2(.78,.85+.08*sin(t*.3))));' +
       'float glow2=fbm(q*1.7-vec2(t*.06,t*.03))*smoothstep(1.1,.05,distance(uv,vec2(.12,.12)));' +
       'vec3 col=base+c1*glow1*.30*s+c2*glow2*.13*s;' +
@@ -235,7 +257,6 @@
   var quoteTxt = document.getElementById('quoteTxt');
   var band = document.getElementById('band');
   var bandPh = document.getElementById('bandPh');
-  var mq = document.getElementById('mq');
   var photoLayers = [].slice.call(document.querySelectorAll('.photo-section .photo-bg'));
 
   /* Split the pinned quote into words so they can light up with scroll progress. */
@@ -280,7 +301,7 @@
         y > lastY && y > 240 && !(navEl && navEl.classList.contains('open')));
     }
     lastY = y;
-    if (reduce) { return; }
+    if (scenesStatic()) { return; }
 
     /* Smoke swells through the middle of the page and settles at either end. */
     var docH = document.body.scrollHeight - vh;
@@ -298,12 +319,6 @@
       heroInner.style.transform = 'translateY(' + (-out * 12) + 'vh) scale(' + (1 - out * 0.06) + ')';
       heroInner.style.opacity = 1 - out * 1.1;
       if (heroPh) { heroPh.style.transform = 'translateY(' + (hp * 6) + '%)'; }
-    }
-
-    /* --- scroll-scrubbed marquee (never autoplays) --- */
-    if (mq) {
-      var half = mq.scrollWidth / 2;
-      if (half > 0) { mq.style.transform = 'translateX(' + (-(y * 0.12) % half) + 'px)'; }
     }
 
     /* --- pinned ceiling scene: statements + media crossfade in lockstep --- */

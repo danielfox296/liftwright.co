@@ -14,14 +14,14 @@
 
 :root {
   /* ---- Cinema tokens (v4 final values) ---- */
-  --bg: #0c0a16;                        /* purple-black page */
-  --bg2: #080612;                       /* deeper: header tint, recessed panels */
+  --bg: #0b0912;                        /* purple-black page */
+  --bg2: #070610;                       /* deeper: header tint, recessed panels */
   --ink: #f0eef8;
   --muted: rgba(240, 238, 248, 0.64);
   --faint: rgba(240, 238, 248, 0.42);
-  --accent: #8d6bff;                    /* buttons, progress lines */
-  --accent-bright: #b4a2ff;             /* headline emphasis words, links */
-  --accent-2: #c084fc;                  /* second smoke tone */
+  --accent: #6b5691;                    /* buttons, progress lines */
+  --accent-bright: #a99bc4;             /* headline emphasis words, links */
+  --accent-2: #7d6aa0;                  /* second smoke tone */
   --line: rgba(240, 238, 248, 0.09);
 
   --sans: 'Montserrat', system-ui, sans-serif;
@@ -34,6 +34,10 @@
      including article/blog pages that narrow --container for reading. */
   --shell: 1200px;
   --shell-pad: clamp(2rem, 8vw, 6.5rem);
+  /* Real rendered height of the fixed header. Desktop lays out a nav row;
+     mobile a 40px hamburger, which is 16px taller. Anything clearing the
+     header must use this, not a hard-coded 76px. */
+  --header-h: 76px;
   --radius: 18px;
   --radius-pill: 300px;
 
@@ -81,7 +85,7 @@ body {
   overflow-x: hidden;
 }
 
-::selection { background: var(--accent); color: #0c0a16; }
+::selection { background: var(--accent); color: #0b0912; }
 
 /* Keyboard focus — visible ring on every interactive element. */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
@@ -127,8 +131,8 @@ em, i { color: var(--accent-bright); font-style: normal; }
   inset: 0;
   z-index: -2;
   background:
-    radial-gradient(60vmax 60vmax at 80% -10%, rgba(141, 107, 255, 0.15), transparent 60%),
-    radial-gradient(70vmax 70vmax at 10% 110%, rgba(192, 132, 252, 0.10), transparent 60%),
+    radial-gradient(60vmax 60vmax at 80% -10%, rgba(107, 86, 145, 0.15), transparent 60%),
+    radial-gradient(70vmax 70vmax at 10% 110%, rgba(125, 106, 160, 0.10), transparent 60%),
     var(--bg);
 }
 .grain {
@@ -151,7 +155,7 @@ body.blog-index .read-veil {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(120% 90% at 50% 0%, rgba(12, 10, 22, 0.55), rgba(12, 10, 22, 0.86) 70%);
+    radial-gradient(120% 90% at 50% 0%, rgba(11, 9, 18, 0.55), rgba(11, 9, 18, 0.86) 70%);
 }
 
 
@@ -275,13 +279,13 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   left: 0;
   right: 0;
   z-index: 70;
-  background: rgba(8, 6, 18, 0.5);
+  background: rgba(7, 6, 16, 0.5);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid transparent;
   transition: transform 0.45s var(--ease), border-color 0.4s, background 0.4s;
 }
-.site-header.scrolled { background: rgba(8, 6, 18, 0.72); border-color: var(--line); }
+.site-header.scrolled { background: rgba(7, 6, 16, 0.72); border-color: var(--line); }
 .site-header.hide { transform: translateY(-100%); }
 
 .header-inner {
@@ -329,7 +333,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   font-weight: 600;
   transition: filter 0.3s, box-shadow 0.3s var(--ease);
 }
-.nav-cta:hover { filter: brightness(1.12); box-shadow: 0 12px 30px -12px rgba(141, 107, 255, 0.6); }
+.nav-cta:hover { filter: brightness(1.12); box-shadow: 0 12px 30px -12px rgba(107, 86, 145, 0.6); }
 
 /* Active page — underline on the current section's link. */
 .nav-links a[aria-current="page"]:not(.nav-cta) {
@@ -363,7 +367,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
 .btn-primary, .btn-on-ink { background: var(--accent); color: #fff; border-color: var(--accent); }
 .btn-primary:hover, .btn-on-ink:hover {
   color: #fff;
-  box-shadow: 0 16px 40px -14px rgba(141, 107, 255, 0.55);
+  box-shadow: 0 16px 40px -14px rgba(107, 86, 145, 0.55);
   filter: brightness(1.06);
 }
 .btn-ghost { background: transparent; color: var(--ink); border-color: rgba(240, 238, 248, 0.32); }
@@ -380,7 +384,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
 .section-tight { padding: 6rem 0; }
 .section-line { border-top: 1px solid var(--line); }
 .section-panel { background: var(--bg-panel); }
-.section-ink { background: rgba(8, 6, 18, 0.55); }
+.section-ink { background: rgba(7, 6, 16, 0.55); }
 .section-ink h1, .section-ink h2, .section-ink h3 { color: var(--ink); }
 .section-ink .lead { color: var(--muted); }
 .section-ink a:not(.btn) { color: var(--accent-bright); }
@@ -413,7 +417,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(150deg, rgba(141, 107, 255, 0.5), rgba(90, 60, 200, 0.42) 55%, rgba(192, 132, 252, 0.38));
+  background: linear-gradient(150deg, rgba(107, 86, 145, 0.5), rgba(70, 55, 110, 0.42) 55%, rgba(125, 106, 160, 0.38));
   mix-blend-mode: color;
   z-index: 1;
   pointer-events: none;
@@ -422,7 +426,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(12, 10, 22, 0.1), rgba(12, 10, 22, 0.36));
+  background: linear-gradient(180deg, rgba(11, 9, 18, 0.1), rgba(11, 9, 18, 0.36));
   z-index: 1;
   pointer-events: none;
 }
@@ -451,7 +455,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(150deg, rgba(141, 107, 255, 0.5), rgba(90, 60, 200, 0.42) 55%, rgba(192, 132, 252, 0.38));
+  background: linear-gradient(150deg, rgba(107, 86, 145, 0.5), rgba(70, 55, 110, 0.42) 55%, rgba(125, 106, 160, 0.38));
   mix-blend-mode: color;
   pointer-events: none;
 }
@@ -462,10 +466,10 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(90deg, rgba(12, 10, 22, 0.92) 0%, rgba(12, 10, 22, 0.72) 46%, rgba(12, 10, 22, 0.44) 100%);
+  background: linear-gradient(90deg, rgba(11, 9, 18, 0.92) 0%, rgba(11, 9, 18, 0.72) 46%, rgba(11, 9, 18, 0.44) 100%);
 }
 .photo-center::after {
-  background: linear-gradient(180deg, rgba(12, 10, 22, 0.82) 0%, rgba(12, 10, 22, 0.72) 100%);
+  background: linear-gradient(180deg, rgba(11, 9, 18, 0.82) 0%, rgba(11, 9, 18, 0.72) 100%);
 }
 .photo-section > .container { position: relative; z-index: 2; }
 .photo-section h1, .photo-section h2, .photo-section h3 { color: var(--ink); }
@@ -510,7 +514,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
 .post-card:hover,
 .related-card:hover,
 .feature-post:hover {
-  border-color: rgba(141, 107, 255, 0.55);
+  border-color: rgba(107, 86, 145, 0.55);
   box-shadow: 0 34px 70px -30px rgba(0, 0, 0, 0.75);
   text-decoration: none;
 }
@@ -527,7 +531,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   opacity: 0;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(141, 107, 255, 0.16), transparent 70%);
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(107, 86, 145, 0.16), transparent 70%);
   transition: opacity 0.4s;
 }
 .card:hover::after,
@@ -672,8 +676,8 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   background: rgba(255, 255, 255, 0.04);
 }
 /* The two bookend tiers are the ones with a leader's name on them. */
-.fn-lead { border-color: rgba(141, 107, 255, 0.5); }
-.fn-score { border-color: rgba(141, 107, 255, 0.3); }
+.fn-lead { border-color: rgba(107, 86, 145, 0.5); }
+.fn-score { border-color: rgba(107, 86, 145, 0.3); }
 .fn-body { display: flex; flex-direction: column; gap: 0.3rem; }
 .fn-ico {
   flex: none;
@@ -685,7 +689,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   border-radius: 50%;
   border: 1px solid var(--line);
   color: var(--accent-bright);
-  background: rgba(141, 107, 255, 0.08);
+  background: rgba(107, 86, 145, 0.08);
 }
 .fn-ico svg { width: 1.3rem; height: 1.3rem; display: block; }
 .fn-name {
@@ -708,7 +712,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   bottom: 0;
   width: 2px;
   transform: translateX(-50%);
-  background: linear-gradient(180deg, rgba(141, 107, 255, 0.65), rgba(141, 107, 255, 0.12));
+  background: linear-gradient(180deg, rgba(107, 86, 145, 0.65), rgba(107, 86, 145, 0.12));
 }
 .fn-link::after {
   content: "";
@@ -732,7 +736,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   background: rgba(255, 255, 255, 0.025);
   transition: border-color 0.4s var(--ease), background 0.4s var(--ease);
 }
-.fn-cell:hover { border-color: rgba(141, 107, 255, 0.45); background: rgba(255, 255, 255, 0.05); }
+.fn-cell:hover { border-color: rgba(107, 86, 145, 0.45); background: rgba(255, 255, 255, 0.05); }
 
 /* stepped process */
 .steps {
@@ -751,7 +755,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   right: 0;
   top: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent), rgba(141, 107, 255, 0.25));
+  background: linear-gradient(90deg, var(--accent), rgba(107, 86, 145, 0.25));
 }
 @media (max-width: 820px) { .steps::before { display: none; } }
 .step { border-top: 2px solid var(--accent); padding-top: 1.2rem; position: relative; }
@@ -798,7 +802,7 @@ a:hover { color: var(--accent-2); text-decoration: underline; }
   font-size: 0.8rem;
   font-weight: 700;
 }
-.fit-yes li::before { content: "\2713"; color: var(--accent-bright); background: rgba(141, 107, 255, 0.18); }
+.fit-yes li::before { content: "\2713"; color: var(--accent-bright); background: rgba(107, 86, 145, 0.18); }
 .fit-no li::before { content: "\2715"; color: var(--faint); background: rgba(240, 238, 248, 0.08); }
 
 /* pull quote — the ONE place the serif survives, as a structurally different
@@ -1047,7 +1051,7 @@ figure.fig figcaption {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(150deg, rgba(141, 107, 255, 0.5), rgba(90, 60, 200, 0.42) 55%, rgba(192, 132, 252, 0.38));
+  background: linear-gradient(150deg, rgba(107, 86, 145, 0.5), rgba(70, 55, 110, 0.42) 55%, rgba(125, 106, 160, 0.38));
   mix-blend-mode: color;
   pointer-events: none;
 }
@@ -1097,7 +1101,7 @@ figure.fig figcaption {
 
 .site-footer {
   position: relative;
-  background: rgba(8, 6, 18, 0.6);
+  background: rgba(7, 6, 16, 0.6);
   border-top: 1px solid var(--line);
   color: var(--muted);
   padding: 5rem 0 3.5rem;
@@ -1131,7 +1135,7 @@ figure.fig figcaption {
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-top: calc(76px + 2vh);
+  padding-top: calc(var(--header-h) + 2vh);
 }
 .hero-grid {
   width: 100%;
@@ -1209,7 +1213,7 @@ figure.fig figcaption {
   border-radius: 22px;
   border: 1px solid var(--line);
   background:
-    radial-gradient(120% 90% at 78% 52%, rgba(141, 107, 255, 0.16), transparent 62%),
+    radial-gradient(120% 90% at 78% 52%, rgba(107, 86, 145, 0.16), transparent 62%),
     rgba(255, 255, 255, 0.025);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -1267,34 +1271,6 @@ figure.fig figcaption {
 }
 .hero-progress i { position: absolute; top: 0; left: 0; width: 100%; height: 40%; background: var(--accent); animation: fall 1.8s var(--ease) infinite; }
 @keyframes fall { from { transform: translateY(-110%); } to { transform: translateY(280%); } }
-
-/* --- marquee: scroll-scrubbed, never autoplaying --- */
-.marquee {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 2rem 0 2.2rem;
-  overflow: hidden;
-  background: rgba(8, 6, 18, 0.35);
-}
-.marquee-label {
-  margin: 0 0 1.1rem;
-  padding: 0 var(--shell-pad);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent-bright);
-}
-.marquee .track { display: inline-block; white-space: nowrap; will-change: transform; }
-.marquee span {
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: var(--muted);
-  padding-right: 3.2rem;
-  letter-spacing: 0.01em;
-}
-/* A thin rule between entries so the list reads as items, not a run-on line. */
-.marquee span + span { border-left: 1px solid var(--line); padding-left: 3.2rem; }
 
 /* --- scene 2: the ceiling — statements left, media crossfade right ---
    620vh, not the concept's 360vh: the live copy is four blocks rather than the
@@ -1368,7 +1344,7 @@ html:not(.js) .ceiling-media .cm:not(:first-child) { display: none; }
 .band.duo::before { opacity: 0.85; }
 
 /* --- beliefs strip --- */
-.beliefs-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(8, 6, 18, 0.45); }
+.beliefs-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(7, 6, 16, 0.45); }
 .beliefs-strip .inner { display: grid; grid-template-columns: 1fr auto; gap: 2.5rem; align-items: center; padding: 6.5rem 0; }
 .beliefs-strip .btn { align-self: center; justify-self: end; white-space: nowrap; }
 .beliefs-strip .lead { margin: 1.2rem 0 0; }
@@ -1400,7 +1376,7 @@ html:not(.js) .ceiling-media .cm:not(:first-child) { display: none; }
 .scene-quote .tint {
   position: absolute;
   inset: 0;
-  background: linear-gradient(150deg, rgba(141, 107, 255, 0.5), rgba(90, 60, 200, 0.42) 55%, rgba(192, 132, 252, 0.38));
+  background: linear-gradient(150deg, rgba(107, 86, 145, 0.5), rgba(70, 55, 110, 0.42) 55%, rgba(125, 106, 160, 0.38));
   mix-blend-mode: color;
 }
 .scene-quote .veil { position: absolute; inset: 0; background: radial-gradient(120% 100% at 50% 50%, transparent 25%, var(--bg) 100%); }
@@ -1582,6 +1558,7 @@ body.article .related-card, body.blog-index .post-card, body.blog-index .feature
   .hero-media, .hero-figure, .ceiling-media { display: none; }
 }
 @media (max-width: 920px) {
+  :root { --header-h: 92px; }
   .nav-toggle {
     display: flex;
     flex-direction: column;
@@ -1609,7 +1586,7 @@ body.article .related-card, body.blog-index .post-card, body.blog-index .feature
     right: 0;
     left: 0;
     padding: 5.5rem var(--shell-pad) 2.5rem;
-    background: #0a0714;
+    background: #09080f;
     border-bottom: 1px solid var(--line);
     box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
     display: none;
@@ -1649,7 +1626,7 @@ body.article .related-card, body.blog-index .post-card, body.blog-index .feature
 
 
 /* ==========================================================================
-   Static mode — reduced motion (.rm) AND no-JS (html:not(.js))
+   Static mode — reduced motion (.rm), small screens (.static-scenes), no-JS
    ==========================================================================
    Scenes unpin into ordinary stacked sections, everything is visible, the
    shader freezes on a single frame, the intro is removed, the header never
@@ -1660,27 +1637,37 @@ body.article .related-card, body.blog-index .post-card, body.blog-index .feature
    them; if that script is absent, blocked or broken, the identical fallback the
    reduced-motion user gets is exactly the right answer. `.js` is set in <head>
    and stripped again by a 4s timer if cinema.js never finishes booting, so a
-   dead script lands here within 4 seconds rather than blanking the page. */
+   dead script lands here within 4 seconds rather than blanking the page.
 
-:is(.rm, html:not(.js)) .scene-hero, :is(.rm, html:not(.js)) .scene-ceiling, :is(.rm, html:not(.js)) .scene-quote { height: auto; }
-:is(.rm, html:not(.js)) .stick { position: static; height: auto; padding: 6rem 0; }
-:is(.rm, html:not(.js)) .ceiling-left { height: auto; }
-:is(.rm, html:not(.js)) .ceiling-left .stmt { position: static; transform: none; opacity: 1; margin-bottom: 2rem; }
-:is(.rm, html:not(.js)) .ceiling-media .cm { opacity: 1; }
-:is(.rm, html:not(.js)) .ceiling-media .cm:not(:first-child) { display: none; }
-:is(.rm, html:not(.js)) .hero-title .c, :is(.rm, html:not(.js)) .hero-lead, :is(.rm, html:not(.js)) .scene-hero .hero-actions, :is(.rm, html:not(.js)) .scene-hero .hero-credential {
+   Phones get the same treatment (.static-scenes, set by cinema.js under 900px).
+   A 100vh sticky frame with overflow:hidden cannot hold the hero's headline,
+   lead, two buttons and credential on a 667px-tall screen — centring inside it
+   clipped the first line under the header and pushed the credential off the
+   bottom. Mobile browsers' collapsing toolbars make 100vh unreliable on top of
+   that. Unpinned, the same content simply flows. */
+
+:is(.rm, .static-scenes, html:not(.js)) .scene-hero, :is(.rm, .static-scenes, html:not(.js)) .scene-ceiling, :is(.rm, .static-scenes, html:not(.js)) .scene-quote { height: auto; }
+:is(.rm, .static-scenes, html:not(.js)) .stick { position: static; height: auto; padding: 6rem 0; }
+/* The first unpinned scene sits directly under the fixed header — 6rem left
+   only 4px of clearance on a phone, which read as the headline touching it. */
+:is(.rm, .static-scenes, html:not(.js)) .scene-hero .stick { padding-top: calc(var(--header-h) + 3rem); }
+:is(.rm, .static-scenes, html:not(.js)) .ceiling-left { height: auto; }
+:is(.rm, .static-scenes, html:not(.js)) .ceiling-left .stmt { position: static; transform: none; opacity: 1; margin-bottom: 2rem; }
+:is(.rm, .static-scenes, html:not(.js)) .ceiling-media .cm { opacity: 1; }
+:is(.rm, .static-scenes, html:not(.js)) .ceiling-media .cm:not(:first-child) { display: none; }
+:is(.rm, .static-scenes, html:not(.js)) .hero-title .c, :is(.rm, .static-scenes, html:not(.js)) .hero-lead, :is(.rm, .static-scenes, html:not(.js)) .scene-hero .hero-actions, :is(.rm, .static-scenes, html:not(.js)) .scene-hero .hero-credential {
   opacity: 1; transform: none; filter: none; transition: none;
 }
-:is(.rm, html:not(.js)) .hero-media { clip-path: none; }
-:is(.rm, html:not(.js)) .quote-txt .w { opacity: 1; }
-:is(.rm, html:not(.js)) :is(.rv, .rv-l, .rv-r, .rv-zoom, .rv-wipe) { opacity: 1; transform: none; clip-path: none; filter: none; }
-:is(.rm, html:not(.js)) .reveal > *,
-:is(.rm, html:not(.js)) :is(.explore-grid, .post-grid, .related-grid, .grid, .steps, .cap-grid, .fit-cols) > * {
+:is(.rm, .static-scenes, html:not(.js)) .hero-media { clip-path: none; }
+:is(.rm, .static-scenes, html:not(.js)) .quote-txt .w { opacity: 1; }
+:is(.rm, .static-scenes, html:not(.js)) :is(.rv, .rv-l, .rv-r, .rv-zoom, .rv-wipe) { opacity: 1; transform: none; clip-path: none; filter: none; }
+:is(.rm, .static-scenes, html:not(.js)) .reveal > *,
+:is(.rm, .static-scenes, html:not(.js)) :is(.explore-grid, .post-grid, .related-grid, .grid, .steps, .cap-grid, .fit-cols) > * {
   opacity: 1 !important; transform: none !important; clip-path: none !important; filter: none !important;
 }
-:is(.rm, html:not(.js)) .band, :is(.rm, html:not(.js)) .photo-section { clip-path: none !important; }
-:is(.rm, html:not(.js)) #intro, :is(.rm, html:not(.js)) .hero-progress { display: none; }
-:is(.rm, html:not(.js)) .site-header { transform: none !important; }
+:is(.rm, .static-scenes, html:not(.js)) .band, :is(.rm, .static-scenes, html:not(.js)) .photo-section { clip-path: none !important; }
+:is(.rm, .static-scenes, html:not(.js)) #intro, :is(.rm, .static-scenes, html:not(.js)) .hero-progress { display: none; }
+:is(.rm, .static-scenes, html:not(.js)) .site-header { transform: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
