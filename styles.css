@@ -996,7 +996,6 @@ figure.fig figcaption {
 .form select option { background: var(--bg2); color: var(--ink); }
 .form textarea { min-height: 130px; resize: vertical; }
 .form .btn { margin-top: 1.6rem; }
-.honey { position: absolute; left: -9999px; }
 
 
 /* ==========================================================================

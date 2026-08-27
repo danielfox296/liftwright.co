@@ -8,7 +8,15 @@
       <input type="hidden" name="_subject" value="New inquiry from daniel-fox.com">
       <input type="hidden" name="_next" value="https://daniel-fox.com/thanks.html">
       <input type="hidden" name="_captcha" value="false">
-      <input type="text" name="_honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <!-- No honeypot, on purpose: formsubmit drops any submission with
+           _honey set while still redirecting to the thanks page, and browser
+           autofill fills hidden fields it can classify (it ignores
+           autocomplete="off"). That combination silently killed a real
+           enquiry on signetartists.com the week of 2026-08-24. FormSubmit's
+           own server-side filtering is the spam layer; if spam grows,
+           escalate to a relay that logs submissions, never a silent trap.
+           The visible "company" field below is a real question for the
+           visitor, not a trap. -->
 
       <label for="name">Your name</label>
       <input id="name" type="text" name="name" required>
